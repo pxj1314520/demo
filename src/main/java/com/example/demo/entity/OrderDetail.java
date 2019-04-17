@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Data
+@Builder
 public class OrderDetail implements Serializable {
 
     @Id

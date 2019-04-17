@@ -1,5 +1,6 @@
 package com.example.demo.servicelmpl;
 
+import com.example.demo.common.ProductEnums;
 import com.example.demo.common.ResultEnums;
 import com.example.demo.common.ResultResponse;
 import com.example.demo.dto.ProductCategoryDto;
@@ -9,11 +10,14 @@ import com.example.demo.entity.ProductInfo;
 import com.example.demo.repository.ProductCategoryRepository;
 import com.example.demo.repository.ProductInfoRepository;
 import com.example.demo.service.ProductInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,5 +56,28 @@ public class ProductInfoServicelmpl implements ProductInfoService {
         }).collect(Collectors.toList());
         System.out.println("product:"+productCategoryDtos.toString());
         return ResultResponse.success(productCategoryDtos);
+    }
+    /*根据id查询商品*/
+    @Override
+    public ResultResponse<ProductInfo> queryById(String productId) {
+        if (StringUtils.isNotBlank(productId)){
+            return ResultResponse.fail(ResultEnums.PARAM_ERROR.getMsg()+":"+productId);
+        }
+        Optional<ProductInfo> byId = productInfoRepository.findById(productId);
+        if (!byId.isPresent()){
+            return ResultResponse.fail(productId+":"+ResultEnums.NOT_EXITS.getMsg());
+        }
+        ProductInfo productInfo = byId.get();
+        //判断商品状态看是否下架
+        if (productInfo.getProductStatus()== ResultEnums.PRODUCT_DOWN.getCode()){
+            return ResultResponse.fail(ResultEnums.PRODUCT_DOWN.getMsg());
+        }
+        return ResultResponse.success(productInfo);
+    }
+    /*修改商品库存的方法*/
+    @Override
+    @Transactional
+    public void updateProduct(ProductInfo productInfo) {
+      productInfoRepository.save(productInfo);
     }
 }

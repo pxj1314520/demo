@@ -60,7 +60,7 @@ public class ProductInfoServicelmpl implements ProductInfoService {
     /*根据id查询商品*/
     @Override
     public ResultResponse<ProductInfo> queryById(String productId) {
-        if (StringUtils.isNotBlank(productId)){
+        if (StringUtils.isBlank(productId)){
             return ResultResponse.fail(ResultEnums.PARAM_ERROR.getMsg()+":"+productId);
         }
         Optional<ProductInfo> byId = productInfoRepository.findById(productId);

@@ -2,8 +2,10 @@ package com.example.demo.entity;
 
 import com.example.demo.common.OrderEnums;
 import com.example.demo.common.PayEnums;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
@@ -15,6 +17,8 @@ import java.util.Date;
 @Data
 @DynamicUpdate//如果有空值就不加入到sql当中
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderMaster implements Serializable {
 
     /** 订单id. */

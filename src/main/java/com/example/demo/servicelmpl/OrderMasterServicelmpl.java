@@ -40,6 +40,7 @@ public class OrderMasterServicelmpl implements OrderMasterService {
     public ResultResponse insertOreder(OrderMasterDto orderMasterDto) {
         //取出订单
         List<OrderDetailDto> items = orderMasterDto.getItems();
+        System.out.println(items.toString());
         //创建订单detail集合，将符合的放入其中，最后批量插入
         List<OrderDetail> orderDetailList  = Lists.newArrayList();
         //计算金额 高精度计算
@@ -47,6 +48,7 @@ public class OrderMasterServicelmpl implements OrderMasterService {
         for (OrderDetailDto item:items
              ) {
             ResultResponse<ProductInfo> resultResponse = productInfoService.queryById(item.getProductId());
+            System.out.println(resultResponse.toString());
             //如果没有查到就生成订单失败
             if (resultResponse.getCode()== ResultEnums.FAIL.getCode()){
                 throw new CustomException(resultResponse.getMsg());

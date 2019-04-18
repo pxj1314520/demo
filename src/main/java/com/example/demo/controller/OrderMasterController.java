@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.common.ResultResponse;
 import com.example.demo.dto.OrderMasterDto;
+import com.example.demo.dto.PageDto;
+import com.example.demo.entity.OrderMaster;
 import com.example.demo.service.OrderMasterService;
 import com.example.demo.util.JsonUtil;
 import com.google.common.collect.Maps;
@@ -38,4 +40,32 @@ public class OrderMasterController {
          return orderMasterService.insertOreder(orderMasterDto);
 
      }
+
+     @RequestMapping("/list")
+     @ApiOperation(value = "订单列表",httpMethod = "GET")
+     public ResultResponse list(@Valid @ApiParam(name="订单列表",value = "传入json格式",required = true)PageDto pageDto, BindingResult bindingResult){
+             //创建map
+             HashMap<String, String> map = Maps.newHashMap();
+             if (bindingResult.hasErrors()){
+                 List<String> collect = bindingResult.getFieldErrors().stream().map(err -> err.getDefaultMessage()).collect(Collectors.toList());
+                 map.put("参数校验异常", JsonUtil.object2string(collect));
+                 return ResultResponse.fail();
+             }
+             return orderMasterService.selectMastlist(pageDto);
+
+     }
+    @RequestMapping("/detail")
+    @ApiOperation(value = "订单详情",httpMethod = "GET")
+    public ResultResponse list( String openId,String orederId){
+        return orderMasterService.orderDetail(openId,orederId);
+
+    }
+
+    @RequestMapping("/cancel")
+    @ApiOperation(value = "取消订单",httpMethod = "POST")
+    public ResultResponse cancel( String openId,String orederId){
+        return orderMasterService.deleteOrder(openId,orederId);
+
+    }
+
 }
